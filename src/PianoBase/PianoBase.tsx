@@ -87,17 +87,20 @@ const PianoBase = forwardRef<PianoBaseHandle, PianoBaseProps>(({
   } = useToneJs({ bpm: 80, createSynth });
 
   useEffect(() => {
-    clearGroupHighlights(0);
-    if (highlightOnThePiano) {
-      const chordArray = Array.isArray(highlightOnThePiano) ? highlightOnThePiano : [highlightOnThePiano];
+  clearGroupHighlights(0);
 
-      playArpeggio(chordArray, "4n", "16n", 0.7);
+  if (highlightOnThePiano && highlightOnThePiano.length > 0) {
+    const chordArray = Array.isArray(highlightOnThePiano)
+      ? highlightOnThePiano
+      : [highlightOnThePiano];
 
-      chordArray.forEach(note => {
-        highlightNoteInGroup(note, Infinity, 0);
-      });
-    }
-  }, [highlightOnThePiano, highlightNoteInGroup, clearGroupHighlights, playArpeggio]);
+    playArpeggio(chordArray, "4n", "16n", 0.7);
+
+    chordArray.forEach(note => {
+      highlightNoteInGroup(note, Infinity, 0);
+    });
+  }
+}, [highlightOnThePiano, highlightNoteInGroup, clearGroupHighlights, playArpeggio]);
 
   const handleMelodyEvent = (event: iChordEvent) => {
     const { pitches, duration, highlightGroup } = event;
