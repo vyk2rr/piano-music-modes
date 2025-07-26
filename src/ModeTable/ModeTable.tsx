@@ -1,9 +1,11 @@
 import React from 'react';
 import type { tMode, tScale } from './../PianoBase/PianoBase.types';
+import './ModeTable.css';
 
 export interface ModeTableProps {
   onModeClick: (mode: tMode) => void;
   scale: tScale; 
+  activeMode: tMode;
 }
 
 export type ModeDefinition = {
@@ -36,7 +38,7 @@ const modeIndexes: Record<tMode, number> = {
   locrian: 6,
 };
 
-const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick }) => {
+const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode }) => {
   if (!scale || scale.length < 7) return null;
 
   return (
@@ -54,7 +56,11 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick }) => {
           return (
             <tr key={mode.name}>
               <td>
-                <button onClick={() => onModeClick(mode.mode)}>
+                <button
+                  onClick={() => onModeClick(mode.mode)}
+                  aria-pressed={mode.mode === activeMode}
+                  className={mode.mode === activeMode ? 'active' : ''}
+                >
                   {mode.name}
                 </button>
               </td>
