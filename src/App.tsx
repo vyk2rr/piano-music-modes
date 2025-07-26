@@ -54,7 +54,11 @@ function App() {
           <h1>Escala deconstruida</h1>
           <ScaleTable scale={scale} />
           <br />
-          <ModeTable scale={scaleNotes} onModeClick={handleModeClick} />
+          <ModeTable
+            scale={scaleNotes}
+            onModeClick={handleModeClick}
+            activeMode={activeMode}
+          />
           <br />
         </>
       ) : null}
