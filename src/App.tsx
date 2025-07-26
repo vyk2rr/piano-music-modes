@@ -1,18 +1,60 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PianoBase from './PianoBase/PianoBase';
-import type { tChord, tNote } from './PianoBase/PianoBase.types';
-import toMusicalMode from './utils/toMusicalMode';
-import normalizeToSharp from './utils/normalizeToSharp'
+import type { tNote, tMode, tChord } from './PianoBase/PianoBase.types';
+import normalizeToSharp from './utils/normalizeToSharp';
 import createPianoSynth from './utils/createPianoSynth';
-import './App.css';
+import TonicSelector from './ScaleTable/TonicSelector';
+import ScaleTable from './ScaleTable/ScaleTable';
+import ModeTable from './ModeTable/ModeTable';
+import generateScale from './utils/generateScale';
+import toMusicalMode from './utils/toMusicalMode';
 
 function App() {
+  const [tonic, setTonic] = useState<tNote>('C');
   const [currentChord, setCurrentChord] = useState<tChord>([]);
-  const originalChord: tChord = ['D5', 'E5', 'F#5', 'G5', 'A5', 'B5', 'C#6', 'D6'];
-  const tonic: tNote = 'D';
+  const [activeMode, setActiveMode] = useState<tMode>('ionian');
+
+  // Escala de la tónica actual
+  const scale = useMemo(() => generateScale(tonic), [tonic]);
+  const scaleNotes = useMemo(() => scale.map(s => s.note), [scale]);
+  const baseChord: tChord = useMemo(
+    () => scaleNotes.map(note => note + '5') as tChord,
+    [scaleNotes]
+  );
+
+  // Cuando el usuario hace click en modo: siempre setea un array nuevo y actualiza modo activo
+  const handleModeClick = (mode: tMode) => {
+    const newChord = toMusicalMode(baseChord, mode, tonic);
+    setCurrentChord([...newChord]);
+    setActiveMode(mode);
+  };
+
+  // Cuando cambia la tónica, reproduce el modo actualmente activo automáticamente
+  const handleTonicChange = (newTonic: tNote) => {
+    setTonic(newTonic);
+    // Genera la escala y acorde de la nueva tónica y modo activo
+    const scale = generateScale(newTonic);
+    const scaleNotes = scale.map(s => s.note);
+    const newBaseChord: tChord = scaleNotes.map(note => note + '5') as tChord;
+    const modeChord = toMusicalMode(newBaseChord, activeMode, newTonic);
+    setCurrentChord([...modeChord]);
+  };
 
   return (
     <div>
+      <p>Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales</p>
+
+      <TonicSelector tonic={tonic} onChange={handleTonicChange} />
+
+      <h1>Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}:</h1>
+      <h1>Escala deconstruida</h1>
+
+      <ScaleTable scale={scale} />
+      <br />
+      
+      <ModeTable scale={scaleNotes} onModeClick={handleModeClick} />
+      <br />
+
       <div className="piano-container">
         <PianoBase
           highlightOnThePiano={normalizeToSharp(currentChord)}
@@ -20,64 +62,6 @@ function App() {
           alwaysShowNoteNames
         />
       </div>
-
-      <h1>
-        Notas: {originalChord.join(' – ')}
-        <br />
-        Tónica: {tonic}
-      </h1>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Modo</th>
-            <th>Descripcion</th>
-            <th>Notas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><button onClick={() => setCurrentChord(originalChord)}>Normal</button></td>
-            <td>Escala original</td>
-            <td>{originalChord.join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'ionian', tonic))}>Ionian</button></td>
-            <td>Escala mayor natural, base tonal.</td>
-            <td>{toMusicalMode(originalChord, 'ionian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'dorian', tonic))}>Dorian</button></td>
-            <td>Menor con 6ta mayor brillante.</td>
-            <td>{toMusicalMode(originalChord, 'dorian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'phrygian', tonic))}>Phrygian</button></td>
-            <td>Menor exótico, 2da menor tensa.</td>
-            <td>{toMusicalMode(originalChord, 'phrygian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'lydian', tonic))}>Lydian</button></td>
-            <td>Mayor soñador, 4ta aumentada.</td>
-            <td>{toMusicalMode(originalChord, 'lydian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'mixolydian', tonic))}>Mixolydian</button></td>
-            <td>Mayor bluesy, 7ma menor.</td>
-            <td>{toMusicalMode(originalChord, 'mixolydian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'aeolian', tonic))}>Aeolian</button></td>
-            <td>Menor natural, base melancólica.</td>
-            <td>{toMusicalMode(originalChord, 'aeolian', tonic).join(", ")}</td>
-          </tr>
-          <tr>
-            <td><button onClick={() => setCurrentChord(toMusicalMode(originalChord, 'locrian', tonic))}>Locrian</button></td>
-            <td>Semidisminuido, 2da menor, 5ta b.</td>
-            <td>{toMusicalMode(originalChord, 'locrian', tonic).join(", ")}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   );
 }
