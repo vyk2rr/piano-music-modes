@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ModeTable from './ModeTable';
-import type { tScale, tMode } from './../PianoBase/PianoBase.types';
+import type { tScale } from './../PianoBase/PianoBase.types';
 
 const mockScale: tScale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
