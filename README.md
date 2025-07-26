@@ -1,65 +1,78 @@
 # Piano Music Modes
 
-**Playing with musical modes (D tonic, D scale)**
+Explore, visualize, and listen to musical scales and modes—turn theory into something intuitive, visual, and fun.
 
 ---
 
-## Overview
+## What is this?
 
-This project is an interactive visualizer for musical modes using a piano interface. You can explore how different modes (Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian) affect the notes of a scale, with D as the tonic. The app highlights the notes on a virtual piano and lets you listen to each mode.
-
----
-
-## Features
-
-- **Interactive Piano:** Highlights notes for the selected mode.
-- **Mode Table:** Shows buttons for each mode, their description, and the notes.
-- **Ear Training Synth:** Uses Tone.js for clear, practical sound.
-- **Note Name Display:** Option to always show note names.
-- **Error Highlighting:** Visual feedback for incorrect notes (if needed).
-- **Alternative Notation:** Shows flat equivalents for black keys.
+An interactive playground for learning and exploring **musical modes, scales, and theory** using a virtual piano.  
+Pick any tonic, see the full major scale, inspect all modes (Ionian, Dorian, etc.), **hear and see notes**, and analyze intervals and formulas.  
+Coming soon: **game modes** for hands-on practice.
 
 ---
 
-## Usage
+## Main Features
 
-1. **Select a mode** by clicking its button in the table.
-2. **See the notes** for the mode and their description.
-3. **Highlighted notes** appear on the piano.
-4. **Click piano keys** to play notes and get visual feedback.
+- **Tonic Selector:** Choose any root note.
+- **Scale Table:** Breaks down degree, note, interval, and formula (T, ST, etc.).
+- **Modes Table:** Switch between modes and see the reconstructed scale, reflecting the correct interval pattern.
+- **Interactive Piano:** Highlights current scale/mode notes and lets you play and listen.
+- **Theory Visualization:** See the jumps/steps between notes and the active formula.
+- **Accessibility:** Keyboard navigation and ARIA.
+- **Robust Testing:** Musical logic, components, and UI are covered.
+
+---
+
+## What’s next?
+
+- **Game Mode:**  
+  Crossword/drag-and-drop/puzzle games to build scales and modes. Practice solfège and theory in a playful way.
+- **Notation options:**  
+  Toggle between sharps/flats depending on context.
+- **Didactic aids:**  
+  Tips to understand “rotating” vs “rebuilding” modes.
+- **Support for more scales and exotic modes.**
+- **Advanced audio/MIDI controls.**
+
+---
+
+## How to use
+
+1. **Pick a tonic** (root note).
+2. **See the major scale** breakdown.
+3. **Switch modes** to see how the scale transforms.
+4. **Interact with the piano** to listen and visualize highlighted notes.
+5. _(Coming soon)_ Play and learn with musical minigames!
 
 ---
 
 ## Tech Stack
 
-- **React** (TypeScript)
-- **Tone.js** (audio synthesis)
-- **Jest** + **Testing Library** (unit and interaction tests)
+- **React** (TypeScript, hooks)
+- **Tone.js** (audio/synthesis)
+- **Jest** + **Testing Library** (unit and UI tests)
+- **CSS Modules** (component-level styling)
 
 ---
 
 ## Development & Testing
 
-- All musical mode logic is tested (`src/utils/toMusicalMode.test.ts`).
-- Piano rendering and interaction are tested (`src/PianoBase/PianoBase.test.tsx`).
-- App integration and mode switching are tested (`src/App.test.tsx`).
-- Tone.js is mocked for tests to avoid Web Audio API issues.
+- Modular, well-tested musical logic and UI.
+- Unit and integration tests for all components.
+- Accessibility and keyboard interaction included.
+- Open to contributions: new games, modes, educational features, etc.
 
 ---
 
 ## License
 
-Currently, **no license is specified**—all rights reserved by default.
-
----
-
-## Disclaimer
-
-This is a learning and exploration project.  
-Feel free to reach out if you want to discuss or contribute.
+No explicit license yet.  
+Contact me if you want to collaborate, learn, or contribute.
 
 ---
 
 ## Author
 
-vyk2rr (GitHub)
+**@vyk2rr**  
+[github.com/vyk2rr](https://github.com/vyk2rr)
