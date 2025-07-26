@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import PianoBase from './PianoBase/PianoBase';
-import type { tNote, tMode, tChord } from './PianoBase/PianoBase.types';
+import type { tNoteName, tMode, tChord } from './PianoBase/PianoBase.types';
 import normalizeToSharp from './utils/normalizeToSharp';
 import createPianoSynth from './utils/createPianoSynth';
 import TonicSelector from './ScaleTable/TonicSelector';
@@ -10,7 +10,7 @@ import generateScale from './utils/generateScale';
 import toMusicalMode from './utils/toMusicalMode';
 
 function App() {
-  const [tonic, setTonic] = useState<tNote>();
+  const [tonic, setTonic] = useState<tNoteName>();
   const [currentChord, setCurrentChord] = useState<tChord>([]);
   const [activeMode, setActiveMode] = useState<tMode>('ionian');
 
@@ -28,7 +28,7 @@ function App() {
     setActiveMode(mode);
   };
 
-  const handleTonicChange = (newTonic: tNote | undefined) => {
+  const handleTonicChange = (newTonic: tNoteName | undefined) => {
     setTonic(newTonic);
     if (!newTonic) {
       setCurrentChord([]);
