@@ -1,14 +1,8 @@
 import React from 'react';
+import type { tScaleNotes } from './../PianoBase/PianoBase.types'
 
-interface ScaleNote {
-  degree: string;
-  note: string;
-  interval: string;
-  formula: string;
-}
-
-interface ScaleTableProps {
-  scale: ScaleNote[];
+export interface ScaleTableProps {
+  scale: tScaleNotes;
 }
 
 const ScaleTable: React.FC<ScaleTableProps> = ({ scale }) => (
@@ -27,7 +21,7 @@ const ScaleTable: React.FC<ScaleTableProps> = ({ scale }) => (
           <td>{item.degree}</td>
           <td>{item.note}</td>
           <td>{item.interval}</td>
-          <td>{item.formula}</td>
+          <td>{item.distanceToNext}</td>
         </tr>
       ))}
     </tbody>

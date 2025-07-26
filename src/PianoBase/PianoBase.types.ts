@@ -3,6 +3,18 @@ export const OCTAVES_RANGE = [1, 2, 3, 4, 5, 6, 7] as const;
 export const BASE_NOTES = [
   'C', 'D', 'E', 'F', 'G', 'A', 'B'
 ] as const;
+export const DEGREES = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+export const INTERVALS = [
+  'Tónica',
+  '2da mayor',
+  '3ra mayor',
+  '4ta justa',
+  '5ta justa',
+  '6ta mayor',
+  '7ma mayor',
+];
+export const FORMULA_SCALE_PATTERN = ['T', 'T', 'ST', 'T', 'T', 'T', 'ST'];
+export const MAJOR_SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1];
 export const NOTES = [
   'Ab', 'A', 'A#', 'Bb', 'B', 'B#', 'Cb', 'C', 'C#', 'Db',
   'D', 'D#', 'Eb', 'E', 'E#', 'Fb', 'F', 'F#', 'Gb', 'G', 'G#'
@@ -39,6 +51,16 @@ export type tNoteWQuality = `${tNoteName}${tChordQualities}`; // example: "Cmaj"
 export type tNoteWOCtaveQuality = `${tNoteName}${tOctaveRange}${tChordQualities}`; // example: "C3maj", "Dmin", "E#sus4", etc.
 export type tPercentString = `${number}%`; // example: "7.5%"
 export type tTime = Tone.Unit.Time; // example: "4n", "2m", "1:2:3", etc.
+
+export type tScale = tNoteName[];
+export const CHROMATIC_SCALE: tScale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+export type tScaleNote = {
+  degree: string;
+  note: tNoteName;
+  interval: string;
+  distanceToNext: string;
+}; // example: { degree: "I", note: "C", interval: "Tónica", distanceToNext: "T" }
+export type tScaleNotes = tScaleNote[]; // example [{ degree: "I", note: "C", interval: "Tónica", distanceToNext: "T" }, ...]
 
 export type tChord = tNoteWithOctave[]
 export type tChordSequence = tChord[]
