@@ -1,15 +1,15 @@
 import React from 'react';
-import type { tMode } from './../PianoBase/PianoBase.types'
+import type { tMode, tScale } from './../PianoBase/PianoBase.types';
 
 export interface ModeTableProps {
   onModeClick: (mode: tMode) => void;
-  scale: string[];
+  scale: tScale; 
 }
 
 export type ModeDefinition = {
-  name: string,
-  mode: tMode,
-  description: string
+  name: string;
+  mode: tMode;
+  description: string;
 };
 
 const modes: ModeDefinition[] = [
@@ -22,8 +22,8 @@ const modes: ModeDefinition[] = [
   { name: "Locrian", mode: "locrian", description: "Semidisminuido, 2da menor, 5ta b." },
 ];
 
-function rotateArray(arr: string[], n: number) {
-  return arr.slice(n).concat(arr.slice(0, n));
+function modeNotesFromScale(scale: tScale, n: number): tScale {
+  return scale.slice(n).concat(scale.slice(0, n));
 }
 
 const modeIndexes: Record<tMode, number> = {
@@ -50,7 +50,7 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick }) => {
       </thead>
       <tbody>
         {modes.map((mode) => {
-          const rotated = rotateArray(scale, modeIndexes[mode.mode]);
+          const rotated: tScale = modeNotesFromScale(scale, modeIndexes[mode.mode]);
           return (
             <tr key={mode.name}>
               <td>
