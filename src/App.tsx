@@ -43,11 +43,11 @@ function App() {
 
   return (
     <div>
+      <p>Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales</p>
       <TonicSelector tonic={tonic} onChange={handleTonicChange} />
 
       {tonic ? (
         <>
-          <p>Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales</p>
           <h1>
             Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}
           </h1>
