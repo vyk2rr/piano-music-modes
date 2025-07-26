@@ -10,29 +10,30 @@ import generateScale from './utils/generateScale';
 import toMusicalMode from './utils/toMusicalMode';
 
 function App() {
-  const [tonic, setTonic] = useState<tNote>('C');
+  const [tonic, setTonic] = useState<tNote>();
   const [currentChord, setCurrentChord] = useState<tChord>([]);
   const [activeMode, setActiveMode] = useState<tMode>('ionian');
 
-  // Escala de la tónica actual
-  const scale = useMemo(() => generateScale(tonic), [tonic]);
-  const scaleNotes = useMemo(() => scale.map(s => s.note), [scale]);
+  const scale = useMemo(() => (tonic ? generateScale(tonic) : []), [tonic]);
+  const scaleNotes = useMemo(() => (scale.length ? scale.map(s => s.note) : []), [scale]);
   const baseChord: tChord = useMemo(
-    () => scaleNotes.map(note => note + '5') as tChord,
+    () => (scaleNotes.length ? (scaleNotes.map(note => note + '5') as tChord) : []),
     [scaleNotes]
   );
 
-  // Cuando el usuario hace click en modo: siempre setea un array nuevo y actualiza modo activo
   const handleModeClick = (mode: tMode) => {
+    if (!tonic || !baseChord.length) return;
     const newChord = toMusicalMode(baseChord, mode, tonic);
     setCurrentChord([...newChord]);
     setActiveMode(mode);
   };
 
-  // Cuando cambia la tónica, reproduce el modo actualmente activo automáticamente
-  const handleTonicChange = (newTonic: tNote) => {
+  const handleTonicChange = (newTonic: tNote | undefined) => {
     setTonic(newTonic);
-    // Genera la escala y acorde de la nueva tónica y modo activo
+    if (!newTonic) {
+      setCurrentChord([]);
+      return;
+    }
     const scale = generateScale(newTonic);
     const scaleNotes = scale.map(s => s.note);
     const newBaseChord: tChord = scaleNotes.map(note => note + '5') as tChord;
@@ -42,18 +43,21 @@ function App() {
 
   return (
     <div>
-      <p>Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales</p>
-
       <TonicSelector tonic={tonic} onChange={handleTonicChange} />
 
-      <h1>Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}:</h1>
-      <h1>Escala deconstruida</h1>
-
-      <ScaleTable scale={scale} />
-      <br />
-      
-      <ModeTable scale={scaleNotes} onModeClick={handleModeClick} />
-      <br />
+      {tonic ? (
+        <>
+          <p>Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales</p>
+          <h1>
+            Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}
+          </h1>
+          <h1>Escala deconstruida</h1>
+          <ScaleTable scale={scale} />
+          <br />
+          <ModeTable scale={scaleNotes} onModeClick={handleModeClick} />
+          <br />
+        </>
+      ) : null}
 
       <div className="piano-container">
         <PianoBase
