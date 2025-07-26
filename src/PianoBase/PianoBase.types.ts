@@ -4,6 +4,11 @@ export const BASE_NOTES = [
   'C', 'D', 'E', 'F', 'G', 'A', 'B'
 ] as const;
 export const DEGREES = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+// degree: 1 = 'I', 2 = 'II', etc. (índice + 1 en DEGREES)
+export type tModeAlteration = { 
+  degree: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  alteration: 'b' | '#';
+};
 export const INTERVALS = [
   'Tónica',
   '2da mayor',
@@ -13,19 +18,10 @@ export const INTERVALS = [
   '6ta mayor',
   '7ma mayor',
 ];
-export const FORMULA_SCALE_PATTERN = ['T', 'T', 'ST', 'T', 'T', 'T', 'ST'];
-export const MAJOR_SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1];
 export const NOTES = [
   'Ab', 'A', 'A#', 'Bb', 'B', 'B#', 'Cb', 'C', 'C#', 'Db',
   'D', 'D#', 'Eb', 'E', 'E#', 'Fb', 'F', 'F#', 'Gb', 'G', 'G#'
 ] as const;
-export const SHARP_TO_FLAT_MAP: Partial<Record<tNoteName, tNoteName>> = {
-  "C#": "Db",
-  "D#": "Eb",
-  "F#": "Gb",
-  "G#": "Ab",
-  "A#": "Bb"
-};
 export const CHORD_QUALITIES = [
   'maj', 'min', 'dim', 'aug',
   'sus2', 'sus4',
@@ -39,7 +35,46 @@ export const MODES = [
   'lydian', 'mixolydian', 'aeolian',
   'locrian'
 ] as const;
-
+export const MODE_INTERVAL_PATTERNS: Record<tMode, string[]> = {
+  ionian:   ['T', 'T', 'ST', 'T', 'T', 'T', 'ST'],
+  dorian:   ['T', 'ST', 'T', 'T', 'T', 'ST', 'T'],
+  phrygian: ['ST', 'T', 'T', 'T', 'ST', 'T', 'T'],
+  lydian:   ['T', 'T', 'T', 'ST', 'T', 'T', 'ST'],
+  mixolydian: ['T', 'T', 'ST', 'T', 'T', 'ST', 'T'],
+  aeolian:    ['T', 'ST', 'T', 'T', 'ST', 'T', 'T'],
+  locrian:    ['ST', 'T', 'T', 'ST', 'T', 'T', 'T'],
+};
+export const MODE_ALTERATIONS: Record<tMode, tModeAlteration[]> = {
+  ionian: [],
+  dorian: [
+    { degree: 3, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  phrygian: [
+    { degree: 2, alteration: 'b' },
+    { degree: 3, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  lydian: [
+    { degree: 4, alteration: '#' },
+  ],
+  mixolydian: [
+    { degree: 7, alteration: 'b' },
+  ],
+  aeolian: [
+    { degree: 3, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  locrian: [
+    { degree: 2, alteration: 'b' },
+    { degree: 3, alteration: 'b' },
+    { degree: 5, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+};
 export type tOctaveRange = typeof OCTAVES_RANGE[number]; // example: 1, 2, 3, 4, 5
 export type tChordQualities = typeof CHORD_QUALITIES[number]; // "maj", "min", "dim", etc.
 
@@ -51,7 +86,13 @@ export type tNoteWQuality = `${tNoteName}${tChordQualities}`; // example: "Cmaj"
 export type tNoteWOCtaveQuality = `${tNoteName}${tOctaveRange}${tChordQualities}`; // example: "C3maj", "Dmin", "E#sus4", etc.
 export type tPercentString = `${number}%`; // example: "7.5%"
 export type tTime = Tone.Unit.Time; // example: "4n", "2m", "1:2:3", etc.
-
+export const SHARP_TO_FLAT_MAP: Partial<Record<tNoteName, tNoteName>> = {
+  "C#": "Db",
+  "D#": "Eb",
+  "F#": "Gb",
+  "G#": "Ab",
+  "A#": "Bb"
+};
 export type tScale = tNoteName[];
 export const CHROMATIC_SCALE: tScale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 export type tScaleNote = {
