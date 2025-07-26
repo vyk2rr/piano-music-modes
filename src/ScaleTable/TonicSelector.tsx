@@ -1,12 +1,12 @@
 import React from 'react';
-import type { tNoteName, tNote } from '../PianoBase/PianoBase.types';
+import type { tScale, tNoteName } from '../PianoBase/PianoBase.types';
 
 interface TonicSelectorProps {
-  tonic: tNote;
-  onChange: (tonic: tNote) => void;
+  tonic?: tNoteName;
+  onChange: (tonic: tNoteName | undefined) => void;
 }
 
-const tonics: tNoteName[] = [
+const tonics: tScale = [
   "C", "C#", "D", "D#", "E", "F",
   "F#", "G", "G#", "A", "A#", "B"
 ];
@@ -15,9 +15,13 @@ const TonicSelector: React.FC<TonicSelectorProps> = ({ tonic, onChange }) => (
   <label>
     Tónica:&nbsp;
     <select
-      value={tonic}
-      onChange={e => onChange(e.target.value as tNote)}
+      value={tonic || ''}
+      onChange={e => {
+        const v = e.target.value;
+        onChange(v ? (v as tNoteName) : undefined);
+      }}
     >
+      <option value="">Selecciona tónica...</option>
       {tonics.map(note =>
         <option key={note} value={note}>{note}</option>
       )}
