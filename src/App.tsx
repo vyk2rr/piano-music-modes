@@ -1,52 +1,36 @@
 import { useState, useMemo } from 'react';
-import PianoBase from './PianoBase/PianoBase';
 import type { tNoteName, tMode, tChord, tScale } from './PianoBase/PianoBase.types';
-import normalizeToSharp from './utils/normalizeToSharp';
-import createPianoSynth from './utils/createPianoSynth';
-import TonicSelector from './ScaleTable/TonicSelector';
-import ScaleTable from './ScaleTable/ScaleTable';
-import ModeTable from './ModeTable/ModeTable';
-import generateScale from './utils/generateScale';
-import { getDiatonicScale } from './utils/getDiatonicScale';
 import { MODE_INTERVAL_PATTERNS } from './PianoBase/PianoBase.types';
+import { getDiatonicScale } from './utils/getDiatonicScale';
+import createPianoSynth from './utils/createPianoSynth';
+import TonicSelector from './TonicSelector/TonicSelector';
+import ModeTable from './ModeTable/ModeTable';
+import PianoBase from './PianoBase/PianoBase';
+import normalizeToSharp from './utils/normalizeToSharp';
 
 function App() {
   const [tonic, setTonic] = useState<tNoteName>();
-  const [currentChord, setCurrentChord] = useState<tChord>([]);
   const [activeMode, setActiveMode] = useState<tMode>('ionian');
+  const scaleNotes = useMemo<tScale>(() => {
+    return tonic
+      ? getDiatonicScale(tonic, MODE_INTERVAL_PATTERNS[activeMode])
+      : [];
+  }, [tonic, activeMode]);
 
-  // Genera la escala mayor (array de objetos con {note, ...})
-  const scale = useMemo(() => (tonic ? generateScale(tonic) : []), [tonic]);
-  // Obtén solo los nombres de nota (tScale: tNoteName[])
-  const scaleNotes = useMemo<tScale>(() => (scale.length ? scale.map(s => s.note) : []), [scale]);
-
-  // El acorde base es la escala mayor con octava fija (para el piano)
-  const baseChord: tChord = useMemo(
-    () => (scaleNotes.length ? (scaleNotes.map(note => `${note}5`) as tChord) : []),
+  // TODO: Asegurarnos de que el piano recibe notas que conoce 
+  // TODO2 (opcional): asegurarnos que el piano recibe lo que sea pero lo traduce a lo que conoce
+  const currentChord: tChord = useMemo(
+    () => scaleNotes.map(n => `${n}5`) as tChord,
     [scaleNotes]
   );
 
-  // Al seleccionar un modo, transforma el acorde base usando la escala diatónica correspondiente
-  const handleModeClick = (mode: tMode) => {
-    if (!scaleNotes.length) return;
-    const diatonicScale = getDiatonicScale(scaleNotes[0], MODE_INTERVAL_PATTERNS[mode]);
-    const modalChord: tChord = diatonicScale.map(note => `${note}5`) as tChord;
-    setCurrentChord([...modalChord]);
-    setActiveMode(mode);
-  };
-
-  // Al cambiar tónica, reinicia el modo actual y el acorde/piano destacado
   const handleTonicChange = (newTonic: tNoteName | undefined) => {
     setTonic(newTonic);
-    if (!newTonic) {
-      setCurrentChord([]);
-      return;
-    }
-    const newScale = generateScale(newTonic);
-    const newScaleNotes = newScale.map(s => s.note);
-    const diatonicScale = getDiatonicScale(newScaleNotes[0], MODE_INTERVAL_PATTERNS[activeMode]);
-    const modalChord: tChord = diatonicScale.map(note => `${note}5`) as tChord;
-    setCurrentChord([...modalChord]);
+  };
+
+  const handleModeClick = (mode: tMode) => {
+    if (!tonic) return;
+    setActiveMode(mode);
   };
 
   return (
@@ -55,14 +39,9 @@ function App() {
         Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales
       </p>
       <TonicSelector tonic={tonic} onChange={handleTonicChange} />
-
       {tonic ? (
         <>
-          <h1>
-            Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}
-          </h1>
-          <h1>Escala deconstruida</h1>
-          <ScaleTable scale={scale} />
+          <h1>Escala "{tonic}" ({activeMode}): {scaleNotes.join('-')}</h1>
           <br />
           <ModeTable
             scale={scaleNotes}
