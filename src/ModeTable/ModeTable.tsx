@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import type { tMode, tScale } from './../PianoBase/PianoBase.types';
 import {
-  SHARP_TO_FLAT_MAP,
   MODE_ALTERATIONS,
   MODE_INTERVAL_PATTERNS,
   DEGREES,
@@ -33,6 +32,16 @@ const modes: ModeDefinition[] = [
   { name: "Locrian", mode: "locrian", description: "Semidisminuido, 2da menor, 5ta b.", modernEquivalent: "Semi-disminuida", classicalType: "Disminuido" },
 ];
 
+function withSeparator(nodes: ReactNode[], sep: ReactNode): ReactNode[] {
+  const out: ReactNode[] = [];
+  nodes.forEach((node, i) => {
+    if (i > 0) out.push(sep);
+    out.push(node);
+  });
+  return out;
+}
+
+
 const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode }) => {
   if (!scale || scale.length < 7) return null;
 
@@ -53,17 +62,14 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode })
         {modes.map((mode) => {
           // Obtiene la escala diatónica teórica para la tónica y el modo
           const diatonicScale = getDiatonicScale(scale[0], MODE_INTERVAL_PATTERNS[mode.mode]);
-
-          // Grados (resaltando alterados)
-          const degreesDisplay = DEGREES.map((deg, i) => {
-            const alteration = MODE_ALTERATIONS[mode.mode].find(a => a.degree === i + 1);
-            let label = deg;
-            if (alteration) label += alteration.alteration;
-            return alteration
-              ? <strong key={deg}>{label}</strong>
-              : <span key={deg}>{label}</span>;
-          }).reduce((prev, curr) => prev === null ? [curr] : [...prev, " - ", curr], null);
-
+          const degreeNodes: ReactNode[] = DEGREES.map((deg, i) => {
+            // buscamos si este grado lleva alteración
+            const alt = MODE_ALTERATIONS[mode.mode].find(a => a.degree === i + 1);
+            const text = deg + (alt?.alteration || '');     // p.e. "III" o "IIIb"
+            const Tag = alt ? 'strong' : 'span';           // si hay alteración, <strong>, si no <span>
+            return <Tag key={deg}>{text}</Tag>;
+          });
+          const degreesDisplay = withSeparator(degreeNodes, ' - ');
           // Intervalos (patrón T/ST)
           const intervalsDisplay = MODE_INTERVAL_PATTERNS[mode.mode].join("-");
 
