@@ -248,6 +248,25 @@ describe('getDiatonicScale for tonic G#', () => {
   });
 });
 
+describe('getDiatonicScale for tonic G##', () => {
+  const testCases: [string, string[]][] = [
+    ['ionian',     ['G##', 'A##', 'B##', 'C##', 'D##', 'E##', 'F###']],
+    ['dorian',     ['G##', 'A##', 'B#', 'C##', 'D##', 'E##', 'F##']],
+    ['phrygian',   ['G##', 'A#', 'B#', 'C##', 'D##', 'E#', 'F##']],
+    ['lydian',     ['G##', 'A##', 'B##', 'C###', 'D##', 'E##', 'F###']],
+    ['mixolydian', ['G##', 'A##', 'B##', 'C##', 'D##', 'E##', 'F##']],
+    ['aeolian',    ['G##', 'A##', 'B#', 'C##', 'D##', 'E#', 'F##']],
+    ['locrian',    ['G##', 'A#', 'B#', 'C##', 'D#', 'E#', 'F##']],
+  ];
+
+  testCases.forEach(([mode, expected]) => {
+    it(`G## ${mode}`, () => {
+      expect(getDiatonicScale('G##', MODE_INTERVAL_PATTERNS[mode as keyof typeof MODE_INTERVAL_PATTERNS]))
+        .toEqual(expected);
+    });
+  });
+});
+
 describe('getDiatonicScale for tonic Abb', () => {
   const testCases: [string, string[]][] = [
     ['ionian',     ['Abb', 'Bbb', 'Cb', 'Dbb', 'Ebb', 'Fb', 'Gb']],
