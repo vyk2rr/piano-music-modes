@@ -1,47 +1,62 @@
-import { CHROMATIC_SCALE } from '../PianoBase/PianoBase.types';
+import { 
+  tNoteName,
+  MODE_INTERVAL_PATTERNS
+} from '../PianoBase/PianoBase.types';
 
-const NOTE_LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const STEP_MAP: Record<string, number> = { T: 2, ST: 1 };
+const INTERVAL_SEMITONES: Record<string, number> = { T: 2, ST: 1 };
+const NOTE_LETTER_SEQUENCE: string[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const SEMITONE_INDICES: Record<string, number> = {
+  'C': 0, 'B#': 0, 'C#': 1, 'Db': 1, 'C##': 2, 'Dbb': 0,
+  'D': 2, 'D#': 3, 'Eb': 3, 'D##': 4, 'Ebb': 2,
+  'E': 4, 'Fb': 4, 'E#': 5, 'F': 5, 'E##': 6, 'Fbb': 3,
+  'F#': 6, 'Gb': 6, 'F##': 7, 'Gbb': 5,
+  'G': 7, 'G#': 8, 'Ab': 8, 'G##': 9, 'Abb': 7,
+  'A': 9, 'A#': 10, 'Bb': 10, 'A##': 11, 'Bbb': 9,
+  'B': 11, 'Cb': 11, 'B#': 0, 'Cbb': 10,
+};
 
-function rotateArray<T>(arr: T[], n: number): T[] {
-  return arr.slice(n).concat(arr.slice(0, n));
-}
+function buildNoteWithSemitone(letter: string, semitone: number): tNoteName {
+  const candidates = Object.keys(SEMITONE_INDICES).filter(note => {
+    return note[0] === letter && SEMITONE_INDICES[note] === semitone;
+  });
 
-function getBaseNoteLetters(tonic: string): string[] {
-  const letter = tonic.replace(/[#b].*$/, '');
-  const idx = NOTE_LETTERS.indexOf(letter.toUpperCase());
-  return rotateArray(NOTE_LETTERS, idx);
-}
-
-function getNaturalIndex(letter: string): number {
-  // Índice de la nota natural (sin alteración) en el círculo cromático
-  return CHROMATIC_SCALE.findIndex(n => n === letter);
-}
-
-function getDiatonicNote(expectedLetter: string, actualChromaticIdx: number): string {
-  // Encuentra la nota base (natural) para la letra esperada
-  const naturalIdx = getNaturalIndex(expectedLetter);
-  let diff = (actualChromaticIdx - naturalIdx + 12) % 12;
-  let accidental = '';
-  if (diff === 0) return expectedLetter; // Natural
-  if (diff > 6) { // Preferir bemoles si es menor a -6
-    diff = diff - 12;
+  if (candidates.length > 0) {
+    // Prioridad: menor número de alteraciones primero (cantidad de "#" o "b")
+    candidates.sort((a, b) => {
+      const alteraciones = (nota: string) => (nota.match(/[#b]/g) || []).length;
+      return alteraciones(a) - alteraciones(b) || a.length - b.length;
+    });
+    return candidates[0] as tNoteName;
   }
-  if (diff > 0) accidental = '#'.repeat(diff);
-  if (diff < 0) accidental = 'b'.repeat(-diff);
-  return expectedLetter + accidental;
+
+  // Caso fallback (no debería ocurrir si el mapa está completo)
+  const naturalSemitone = SEMITONE_INDICES[letter];
+  if (naturalSemitone === undefined) throw new Error(`Invalid letter ${letter}`);
+
+  const diff = (semitone - naturalSemitone + 12) % 12;
+  return (diff <= 6
+    ? letter + '#'.repeat(diff)
+    : letter + 'b'.repeat(12 - diff)) as tNoteName;
 }
 
-export function getDiatonicScale(tonic: string, pattern: string[]): string[] {
-  const baseLetters = getBaseNoteLetters(tonic);
-  let acc: string[] = [tonic];
-  let chromaIdx = CHROMATIC_SCALE.indexOf(tonic);
+export function getDiatonicScale(
+  tonic: tNoteName,
+  pattern: string[]
+): tNoteName[] {
+  const scale: tNoteName[] = [tonic];
 
-  for (let i = 1; i < 7; i++) {
-    const steps = STEP_MAP[pattern[i - 1]];
-    chromaIdx = (chromaIdx + steps) % CHROMATIC_SCALE.length;
-    const expectedLetter = baseLetters[i];
-    acc.push(getDiatonicNote(expectedLetter, chromaIdx));
-  }
-  return acc;
+  let letterIndex = NOTE_LETTER_SEQUENCE.indexOf(tonic[0]);
+  let semitoneIndex = SEMITONE_INDICES[tonic];
+
+  pattern.forEach(interval => {
+    letterIndex = (letterIndex + 1) % 7;
+    const nextLetter = NOTE_LETTER_SEQUENCE[letterIndex];
+
+    semitoneIndex = (semitoneIndex + INTERVAL_SEMITONES[interval]) % 12;
+
+    const nextNote = buildNoteWithSemitone(nextLetter, semitoneIndex);
+    scale.push(nextNote);
+  });
+
+  return scale.slice(0, 7);
 }
