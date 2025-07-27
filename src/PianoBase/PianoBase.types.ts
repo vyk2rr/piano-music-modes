@@ -3,24 +3,15 @@ export const OCTAVES_RANGE = [1, 2, 3, 4, 5, 6, 7] as const;
 export const BASE_NOTES = [
   'C', 'D', 'E', 'F', 'G', 'A', 'B'
 ] as const;
-export const DEGREES = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-// degree: 1 = 'I', 2 = 'II', etc. (índice + 1 en DEGREES)
-export type tModeAlteration = { 
-  degree: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  alteration: 'b' | '#';
-};
-export const INTERVALS = [
-  'Tónica',
-  '2da mayor',
-  '3ra mayor',
-  '4ta justa',
-  '5ta justa',
-  '6ta mayor',
-  '7ma mayor',
-];
+
 export const NOTES = [
-  'Ab', 'A', 'A#', 'Bb', 'B', 'B#', 'Cb', 'C', 'C#', 'Db',
-  'D', 'D#', 'Eb', 'E', 'E#', 'Fb', 'F', 'F#', 'Gb', 'G', 'G#'
+  'Ab', 'A', 'A#', 'Abb', 'A##',
+  'Bb', 'B', 'B#', 'Bbb',
+  'Cb', 'C', 'C#', 'C##', 'Cbb',
+  'Db', 'D', 'D#', 'Dbb', 'D##',
+  'Eb', 'E', 'E#', 'Ebb', 'E##',
+  'Fb', 'F', 'F#', 'Fbb', 'F##',
+  'Gb', 'G', 'G#', 'Gbb', 'G##'
 ] as const;
 export const CHORD_QUALITIES = [
   'maj', 'min', 'dim', 'aug',
@@ -35,46 +26,6 @@ export const MODES = [
   'lydian', 'mixolydian', 'aeolian',
   'locrian'
 ] as const;
-export const MODE_INTERVAL_PATTERNS: Record<tMode, string[]> = {
-  ionian:   ['T', 'T', 'ST', 'T', 'T', 'T', 'ST'],
-  dorian:   ['T', 'ST', 'T', 'T', 'T', 'ST', 'T'],
-  phrygian: ['ST', 'T', 'T', 'T', 'ST', 'T', 'T'],
-  lydian:   ['T', 'T', 'T', 'ST', 'T', 'T', 'ST'],
-  mixolydian: ['T', 'T', 'ST', 'T', 'T', 'ST', 'T'],
-  aeolian:    ['T', 'ST', 'T', 'T', 'ST', 'T', 'T'],
-  locrian:    ['ST', 'T', 'T', 'ST', 'T', 'T', 'T'],
-};
-export const MODE_ALTERATIONS: Record<tMode, tModeAlteration[]> = {
-  ionian: [],
-  dorian: [
-    { degree: 3, alteration: 'b' },
-    { degree: 7, alteration: 'b' },
-  ],
-  phrygian: [
-    { degree: 2, alteration: 'b' },
-    { degree: 3, alteration: 'b' },
-    { degree: 6, alteration: 'b' },
-    { degree: 7, alteration: 'b' },
-  ],
-  lydian: [
-    { degree: 4, alteration: '#' },
-  ],
-  mixolydian: [
-    { degree: 7, alteration: 'b' },
-  ],
-  aeolian: [
-    { degree: 3, alteration: 'b' },
-    { degree: 6, alteration: 'b' },
-    { degree: 7, alteration: 'b' },
-  ],
-  locrian: [
-    { degree: 2, alteration: 'b' },
-    { degree: 3, alteration: 'b' },
-    { degree: 5, alteration: 'b' },
-    { degree: 6, alteration: 'b' },
-    { degree: 7, alteration: 'b' },
-  ],
-};
 export type tOctaveRange = typeof OCTAVES_RANGE[number]; // example: 1, 2, 3, 4, 5
 export type tChordQualities = typeof CHORD_QUALITIES[number]; // "maj", "min", "dim", etc.
 
@@ -94,7 +45,6 @@ export const SHARP_TO_FLAT_MAP: Partial<Record<tNoteName, tNoteName>> = {
   "A#": "Bb"
 };
 export type tScale = tNoteName[];
-export const CHROMATIC_SCALE: tScale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 export type tScaleNote = {
   degree: string;
   note: tNoteName;
@@ -161,3 +111,78 @@ export interface iChordEvent {
 }
 
 export type tMelodySequence = iChordEvent[];
+
+export const MODE_INTERVAL_PATTERNS: Record<tMode, string[]> = {
+  ionian: ['T', 'T', 'ST', 'T', 'T', 'T', 'ST'],
+  dorian: ['T', 'ST', 'T', 'T', 'T', 'ST', 'T'],
+  phrygian: ['ST', 'T', 'T', 'T', 'ST', 'T', 'T'],
+  lydian: ['T', 'T', 'T', 'ST', 'T', 'T', 'ST'],
+  mixolydian: ['T', 'T', 'ST', 'T', 'T', 'ST', 'T'],
+  aeolian: ['T', 'ST', 'T', 'T', 'ST', 'T', 'T'],
+  locrian: ['ST', 'T', 'T', 'ST', 'T', 'T', 'T'],
+};
+export const INTERVAL_SEMITONES: Record<string, number> = { T: 2, ST: 1 };
+export const MODE_ALTERATIONS: Record<tMode, tModeAlteration[]> = {
+  ionian: [],
+  dorian: [
+    { degree: 3, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  phrygian: [
+    { degree: 2, alteration: 'b' },
+    { degree: 3, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  lydian: [
+    { degree: 4, alteration: '#' },
+  ],
+  mixolydian: [
+    { degree: 7, alteration: 'b' },
+  ],
+  aeolian: [
+    { degree: 3, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+  locrian: [
+    { degree: 2, alteration: 'b' },
+    { degree: 3, alteration: 'b' },
+    { degree: 5, alteration: 'b' },
+    { degree: 6, alteration: 'b' },
+    { degree: 7, alteration: 'b' },
+  ],
+};
+export const DEGREES = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+// degree: 1 = 'I', 2 = 'II', etc. (índice + 1 en DEGREES)
+export type tModeAlteration = {
+  degree: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  alteration: 'b' | '#';
+};
+export const INTERVALS = [
+  'Tónica',
+  '2da mayor',
+  '3ra mayor',
+  '4ta justa',
+  '5ta justa',
+  '6ta mayor',
+  '7ma mayor',
+];
+
+export const NOTE_LETTER_SEQUENCE: tNote[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+export const SEMITONE_INDICES: Record<tNoteName, number> = {
+  'C': 0, 'B#': 0, 'Dbb': 0,
+  'C#': 1, 'Db': 1,
+  'C##': 2, 'D': 2, 'Ebb': 2,
+  'D#': 3, 'Eb': 3, 'Fbb': 3,
+  'D##': 4, 'E': 4, 'Fb': 4,
+  'E#': 5, 'F': 5, 'Gbb': 5,
+  'E##': 6, 'F#': 6, 'Gb': 6,
+  'F##': 7, 'G': 7, 'Abb': 7,
+  'G#': 8, 'Ab': 8,
+  'G##': 9, 'A': 9, 'Bbb': 9,
+  'A#': 10, 'Bb': 10, 'Cbb': 10,
+  'A##': 11, 'B': 11, 'Cb': 11,
+};
+// CHROMATIC_SCALE contiene las equivalencias 0 -> C, C# -> 1 ... etc (las de SEMITONE_INDICES)
+export const CHROMATIC_SCALE: tScale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
