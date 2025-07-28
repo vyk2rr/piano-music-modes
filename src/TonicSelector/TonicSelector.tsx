@@ -10,7 +10,7 @@ export default function TonicSelector({ tonic, onChange }: iTonicSelector) {
     <select
       data-testid="tonic-selector"
       value={tonic}
-      onChange={e => onChange(e.target.value as tNoteName)}
+      onChange={e => onChange(e.target.value === "" ? undefined : (e.target.value as tNoteName))}
     >
       <option value="">Selecciona tónica...</option>
 
