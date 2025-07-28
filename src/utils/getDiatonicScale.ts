@@ -3,30 +3,26 @@ import {
   NOTES,
   INTERVAL_SEMITONES,
   NOTE_LETTER_SEQUENCE,
-  SEMITONE_INDICES,
+  BASE_PITCH_MAP,
 } from '../PianoBase/PianoBase.types';
+import getPitchClass from './getPitchClass';
 
-function buildNoteWithSemitone(letter: tNoteName, semitone: number): tNoteName {
-  const candidates = NOTES
-    .filter(note => note[0] === letter && SEMITONE_INDICES[note] === semitone);
-
+function buildNoteWithSemitone(letter: tNote, semitone: number): tNoteName {
+  const candidates = NOTES.filter(
+    note => note[0] === letter && getPitchClass(note) === semitone
+  );
   if (candidates.length > 0) {
-    // Prioridad: menor número de alteraciones primero (cantidad de "#" o "b")
-    candidates.sort((a, b) => {
-      const alteraciones = (nota: string) => (nota.match(/[#b]/g) || []).length;
-      return alteraciones(a) - alteraciones(b) || a.length - b.length;
-    });
+    candidates.sort((a, b) =>
+      (a.match(/[#b]/g) || []).length - (b.match(/[#b]/g) || []).length
+      || a.length - b.length
+    );
     return candidates[0] as tNoteName;
   }
-
-  // Caso fallback (no debería ocurrir si el mapa está completo)
-  const naturalSemitone = SEMITONE_INDICES[letter];
-  if (naturalSemitone === undefined) throw new Error(`Invalid letter ${letter}`);
-
-  const diff = (semitone - naturalSemitone + 12) % 12;
+  const basePitch = BASE_PITCH_MAP[letter];
+  const diff = (semitone - basePitch + 12) % 12;
   return (diff <= 6
-    ? letter + '#'.repeat(diff)
-    : letter + 'b'.repeat(12 - diff)) as tNoteName;
+    ? (letter + '#'.repeat(diff))
+    : (letter + 'b'.repeat(12 - diff))) as tNoteName;
 }
 
 export function getDiatonicScale(
@@ -34,17 +30,14 @@ export function getDiatonicScale(
   pattern: string[]
 ): tNoteName[] {
   const scale: tNoteName[] = [tonic];
-
-  const tonicLetter = tonic.charAt(0) as tNote;
+  const tonicLetter = tonic[0] as tNote;
   let letterIndex = NOTE_LETTER_SEQUENCE.indexOf(tonicLetter);
-  let semitoneIndex = SEMITONE_INDICES[tonic];
+  let semitoneIndex = getPitchClass(tonic);
 
   pattern.forEach(interval => {
     letterIndex = (letterIndex + 1) % 7;
     const nextLetter = NOTE_LETTER_SEQUENCE[letterIndex];
-
     semitoneIndex = (semitoneIndex + INTERVAL_SEMITONES[interval]) % 12;
-
     const nextNote = buildNoteWithSemitone(nextLetter, semitoneIndex);
     scale.push(nextNote);
   });
