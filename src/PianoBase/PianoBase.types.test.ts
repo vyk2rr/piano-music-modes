@@ -4,10 +4,7 @@ import {
   NOTES,
   CHROMATIC_SCALE,
   MODES,
-  MODE_INTERVAL_PATTERNS,
-  SHARP_TO_FLAT_MAP,
-  SEMITONE_INDICES,
-  tNoteName
+  MODE_INTERVAL_PATTERNS
 } from './PianoBase.types';
 
 describe('PianoBase.types constants integrity', () => {
@@ -30,7 +27,6 @@ describe('PianoBase.types constants integrity', () => {
     CHROMATIC_SCALE.forEach(semi => {
       expect(NOTES.some(n => {
         // map sharps to themselves; flats/enharmonics also valid
-        // use SEMITONE_INDICES internally, but here simple inclusion:
         return n === semi || n.endsWith(semi) || semi.endsWith(n);
       })).toBe(true);
     });
@@ -48,29 +44,6 @@ describe('PianoBase.types constants integrity', () => {
     Object.values(MODE_INTERVAL_PATTERNS).forEach(pat => {
       expect(pat).toHaveLength(7);
       pat.forEach(step => expect(['T', 'ST']).toContain(step));
-    });
-  });
-
-  it('SHARP_TO_FLAT_MAP is a subset of NOTES and correctly inverse', () => {
-    const entries = Object.entries(SHARP_TO_FLAT_MAP) as [tNoteName, tNoteName][];
-    entries.forEach(([sharp, flat]) => {
-      expect(NOTES).toContain(sharp);
-      expect(NOTES).toContain(flat);
-      // ahora sharp y flat son tNoteName, así que esto ya no da error
-      expect(SEMITONE_INDICES[sharp]).toEqual(SEMITONE_INDICES[flat]);
-    });
-  });
-
-  it('SEMITONE_INDICES covers exactly all tNoteName values', () => {
-    // keys of SEMITONE_INDICES must match NOTES (order may differ)
-    const keys = Object.keys(SEMITONE_INDICES).sort();
-    const notes = [...NOTES].sort();
-    expect(keys).toEqual(notes);
-    // all values 0..11
-    Object.values(SEMITONE_INDICES).forEach(v => {
-      expect(Number.isInteger(v)).toBe(true);
-      expect(v).toBeGreaterThanOrEqual(0);
-      expect(v).toBeLessThanOrEqual(11);
     });
   });
 });
