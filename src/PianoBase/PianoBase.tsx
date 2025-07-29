@@ -140,6 +140,9 @@ const PianoBase = forwardRef<PianoBaseHandle, PianoBaseProps>(({
 
   return (
     <div className={`piano-base ${className || ''}`} data-testid="piano-base">
+      <span style={{ color: 'white'}}>
+        {highlightOnThePiano?.join('-')}
+      </span>
       {renderUI ? renderUI({
         white,
         black,
