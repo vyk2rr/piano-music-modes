@@ -1,12 +1,12 @@
 import { SHARP_TO_FLAT_MAP } from '../PianoBase/PianoBase.types';
-import type { tNoteWithOctave } from '../PianoBase/PianoBase.types';
+import type { tNoteWithOctave, tChord } from '../PianoBase/PianoBase.types';
 
 // Invierte el mapa de sostenidos a bemoles para mapear bemoles a sostenidos
 const FLAT_TO_SHARP_MAP = Object.fromEntries(
   Object.entries(SHARP_TO_FLAT_MAP).map(([sharp, flat]) => [flat, sharp])
 );
 
-export default function normalizeToSharp(notes: tNoteWithOctave[]): tNoteWithOctave[] {
+export default function normalizeToSharp(notes: tChord): tChord {
   return notes.map((note) => {
     const match = note.match(/^([A-G][b#]?)(\d)$/);
     if (!match) return note; // Devuelve la nota sin cambios si no coincide con el formato
