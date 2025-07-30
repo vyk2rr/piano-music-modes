@@ -1,3 +1,35 @@
+.mode-row {
+  white-space: nowrap;
+}
+
+.mode-row.mode-ionian {
+  background-color: #fff9a9; 
+}
+
+.mode-row.mode-dorian {
+  background-color: #cce6ff; 
+}
+
+.mode-row.mode-phrygian {
+  background-color: #d3a2b6; 
+}
+
+.mode-row.mode-lydian {
+  background-color: #a2b6d3; 
+}
+
+.mode-row.mode-mixolydian {
+  background-color: #ffb3b3; 
+}
+
+.mode-row.mode-aeolian {
+  background-color: #a2e6e6; 
+}
+
+.mode-row.mode-locrian {
+  background-color: #d39ca2; 
+}
+
 button.active,
 button[aria-pressed="true"] {
   background: #4f46e5;
