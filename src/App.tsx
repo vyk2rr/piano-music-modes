@@ -5,6 +5,7 @@ import { getDiatonicScale } from './utils/getDiatonicScale';
 import { getChordColor } from './ChordPalette/ChordPalette.utils';
 import createPianoSynth from './utils/createPianoSynth';
 import TonicSelector from './TonicSelector/TonicSelector';
+import styles from './App.module.css';
 import ModeTable from './ModeTable/ModeTable';
 import PianoBase from './PianoBase/PianoBase';
 import normalizeToSharp from './utils/normalizeToSharp';
@@ -64,8 +65,9 @@ function App() {
 
   return (
     <div>
-      <p>
-        Elige una tónica y un modo para explorar cómo suenan y cómo se construyen las escalas musicales
+      <p className={styles.intro}>
+        Elige una tónica y un modo para explorar cómo suenan 
+        y cómo se construyen las escalas musicales:
       </p>
       <TonicSelector tonic={tonic} onChange={handleTonicChange} />
       {tonic ? (
