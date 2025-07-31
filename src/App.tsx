@@ -77,15 +77,6 @@ function App() {
             activeMode={activeMode}
           />
           <br />
-
-          {/* 
-          <h1>starting with Ionian:</h1>
-          <h1>naturalMajorScale: {naturalMajorScale.join(" ")}</h1>
-          <h1>activeMode: {activeMode}</h1>
-          <h1>diatonicModeScale: {diatonicModeScale.join(" ")}</h1>
-          <h1>humanReadableScale: {humanReadableScale.join(" ")}</h1>
-          <h1>octaveAssignedScale: {octaveAssignedScale.join(" ")}</h1>
-          <h1>pianoScale: {pianoScale.join(" ")}</h1> */}
           {debug && (
             <>
               <h1>starting with Ionian:</h1>
@@ -114,6 +105,8 @@ function App() {
         style={{ background: scaleGradientColor, borderRadius: 16 }}
       >
         <PianoBase
+          octave={5}
+          octaves={2}
           highlightOnThePiano={pianoScale}
           createSynth={createPianoSynth}
           alwaysShowNoteNames

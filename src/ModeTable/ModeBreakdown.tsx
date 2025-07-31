@@ -58,7 +58,7 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
       <tbody>
         <tr>
           <td colSpan={7} className="mode-breakdown__heading">
-            Escala mayor de {tonic}
+            Escala Natural Mayor "{tonic}"
           </td>
         </tr>
         <IntervalRow pattern={MODE_INTERVAL_PATTERNS['ionian']} />
@@ -78,7 +78,7 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
         </tr>
         <tr>
           <td colSpan={7} className="mode-breakdown__heading">
-            Escala mayor de {tonic} (modo {activeMode})
+            Escala en "Modo {activeMode}"
           </td>
         </tr>
         <IntervalRow pattern={MODE_INTERVAL_PATTERNS[activeMode]} />
