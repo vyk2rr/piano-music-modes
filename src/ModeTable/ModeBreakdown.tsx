@@ -61,14 +61,6 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
             Escala Natural Mayor "{tonic}"
           </td>
         </tr>
-        <IntervalRow pattern={MODE_INTERVAL_PATTERNS['ionian']} />
-        <tr>
-          {DEGREES.map((deg) => (
-            <td key={deg} className="mode-breakdown__degree-cell">
-              {deg}
-            </td>
-          ))}
-        </tr>
         <tr>
           {naturalMajorScale.map((note, i) => (
             <td key={i} className="mode-breakdown__note-cell">
@@ -77,25 +69,17 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
           ))}
         </tr>
         <tr>
+          {DEGREES.map((deg) => (
+            <td key={deg} className="mode-breakdown__degree-cell">
+              {deg}
+            </td>
+          ))}
+        </tr>
+        <IntervalRow pattern={MODE_INTERVAL_PATTERNS['ionian']} />
+        <tr>
           <td colSpan={7} className="mode-breakdown__heading">
             Escala en "Modo {activeMode}"
           </td>
-        </tr>
-        <IntervalRow pattern={MODE_INTERVAL_PATTERNS[activeMode]} />
-        <tr>
-          {DEGREES.map((deg, i) => {
-            const alt = MODE_ALTERATIONS[activeMode].find(a => a.degree === i + 1);
-            const text = deg + (alt?.alteration || '');
-            const Tag = alt ? 'strong' : 'span';
-            return (
-              <td key={deg} className={"mode-breakdown__degree-cell" +
-                (alt ? " mode-breakdown__degree-cell--altered" : "")
-              }
-              >
-                <Tag>{text}</Tag>
-              </td>
-            );
-          })}
         </tr>
         <tr>
           {diatonicModeScale.map((note, i) => {
@@ -112,6 +96,22 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
             );
           })}
         </tr>
+        <tr>
+          {DEGREES.map((deg, i) => {
+            const alt = MODE_ALTERATIONS[activeMode].find(a => a.degree === i + 1);
+            const text = deg + (alt?.alteration || '');
+            const Tag = alt ? 'strong' : 'span';
+            return (
+              <td key={deg} className={"mode-breakdown__degree-cell" +
+                (alt ? " mode-breakdown__degree-cell--altered" : "")
+              }
+              >
+                <Tag>{text}</Tag>
+              </td>
+            );
+          })}
+        </tr>
+        <IntervalRow pattern={MODE_INTERVAL_PATTERNS[activeMode]} />
       </tbody>
     </table>
   );
