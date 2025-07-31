@@ -1,4 +1,5 @@
 import { BASE_NOTES, NOTES, tNoteName, tNote } from '../PianoBase/PianoBase.types';
+import styles from './TonicSelector.module.css'
 
 interface iTonicSelector {
   tonic: tNoteName | undefined;
@@ -8,6 +9,7 @@ interface iTonicSelector {
 export default function TonicSelector({ tonic, onChange }: iTonicSelector) {
   return (
     <select
+      className={styles.selector}
       data-testid="tonic-selector"
       value={tonic}
       onChange={e => onChange(e.target.value === "" ? undefined : (e.target.value as tNoteName))}
