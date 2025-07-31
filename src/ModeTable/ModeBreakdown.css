@@ -1,12 +1,8 @@
 table.mode-breakdown {
-  border-collapse: collapse;
-  width: 100%;
   margin: 10px 0;
-  tr {
-    td {
-      border: 0;
-    }
-  }
+ td {
+  width: 50px;
+ }
 }
 
 .mode-breakdown__heading {
