@@ -231,10 +231,11 @@ describe('PianoBase', () => {
     });
 
     it('updates highlights when highlightOnThePiano prop changes', () => {
-      render(<PianoBase highlightOnThePiano={['C4', 'E4', 'G4']} />);
+      const { rerender } = render(
+        <PianoBase highlightOnThePiano={['C4', 'E4', 'G4']} />
+      );
       jest.clearAllMocks();
       const newChord: tNoteWithOctave[] = ['D4', 'F#4', 'A4'];
-      const { rerender } = render(<PianoBase />);
       rerender(<PianoBase highlightOnThePiano={newChord} />);
 
       expect(mockHighlightFns.clearGroupHighlights).toHaveBeenCalledWith(0);
