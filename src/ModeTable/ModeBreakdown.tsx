@@ -58,27 +58,7 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
       <tbody>
         <tr>
           <td colSpan={7} className="mode-breakdown__heading">
-            Escala Natural Mayor "{tonic}"
-          </td>
-        </tr>
-        <tr>
-          {naturalMajorScale.map((note, i) => (
-            <td key={i} className="mode-breakdown__note-cell">
-              {note}
-            </td>
-          ))}
-        </tr>
-        <tr>
-          {DEGREES.map((deg) => (
-            <td key={deg} className="mode-breakdown__degree-cell">
-              {deg}
-            </td>
-          ))}
-        </tr>
-        <IntervalRow pattern={MODE_INTERVAL_PATTERNS['ionian']} />
-        <tr>
-          <td colSpan={7} className="mode-breakdown__heading">
-            Escala en "Modo {activeMode}"
+            "{tonic}" Modo {activeMode}
           </td>
         </tr>
         <tr>
@@ -112,6 +92,27 @@ const ModeBreakdown: React.FC<ModeBreakdownProps> = ({
           })}
         </tr>
         <IntervalRow pattern={MODE_INTERVAL_PATTERNS[activeMode]} />
+
+        <tr>
+          <td colSpan={7} className="mode-breakdown__heading">
+            "{tonic}" Mayor Natural 
+          </td>
+        </tr>
+        <tr>
+          {naturalMajorScale.map((note, i) => (
+            <td key={i} className="mode-breakdown__note-cell">
+              {note}
+            </td>
+          ))}
+        </tr>
+        <tr>
+          {DEGREES.map((deg) => (
+            <td key={deg} className="mode-breakdown__degree-cell">
+              {deg}
+            </td>
+          ))}
+        </tr>
+        <IntervalRow pattern={MODE_INTERVAL_PATTERNS['ionian']} />
       </tbody>
     </table>
   );

@@ -8,6 +8,7 @@ import {
 import { getDiatonicScale } from '../utils/getDiatonicScale';
 import { getChordColor } from './../ChordPalette/ChordPalette.utils';
 import { normalizeToPianoSharpScale } from './../utils/normalizeToPianoSharpScale';
+import MiniPianoSvg from '../MiniPianoSvg/MiniPianoSvg';
 import './ModeTable.css';
 
 export interface ModeTableProps {
@@ -54,6 +55,7 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode })
           <th>Tipo clásico</th>
           <th>Modo</th>
           <th>Notas</th>
+          <th>Mini-Piano</th>
           <th>Grados</th>
           <th>Intervalos</th>
           <th>Equivalencia moderna</th>
@@ -86,7 +88,7 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode })
                   {mode.name}
                 </button>
               </td>
-               <td>
+              <td>
                 {withSeparator(
                   diatonicScale.map((note, i) => {
                     const isAltered = MODE_ALTERATIONS[mode.mode].some(a => a.degree === i + 1);
@@ -96,6 +98,12 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode })
                   ', '
                 )}
               </td>
+              <td>
+                {(() => {
+                  const normalized = normalizeToPianoSharpScale(diatonicScale);
+                  return <MiniPianoSvg highlight={normalized} />;
+                })()}
+              </td>
               <td>{withSeparator(DEGREES.map((deg, i) => {
                 // buscamos si este grado lleva alteración
                 const alt = MODE_ALTERATIONS[mode.mode].find(a => a.degree === i + 1);
@@ -103,7 +111,7 @@ const ModeTable: React.FC<ModeTableProps> = ({ scale, onModeClick, activeMode })
                 const Tag = alt ? 'strong' : 'span';
                 return <Tag key={deg}>{text}</Tag>;
               }), ' - ')}</td>
-             
+
               <td>{MODE_INTERVAL_PATTERNS[mode.mode].join("-")}</td>
               <td>{mode.modernEquivalent}</td>
               <td>{mode.description}</td>
