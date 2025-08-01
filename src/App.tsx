@@ -66,7 +66,7 @@ function App() {
   return (
     <div>
       <p className={styles.intro}>
-        Elige una tónica y un modo para explorar cómo suenan 
+        Elige una tónica y un modo para explorar cómo suenan
         y cómo se construyen las escalas musicales:
       </p>
       <TonicSelector tonic={tonic} onChange={handleTonicChange} />
@@ -91,6 +91,19 @@ function App() {
             </>
           )}
 
+          <div
+            className="piano-container"
+            style={{ background: scaleGradientColor, borderRadius: 16 }}
+          >
+            <PianoBase
+              octave={5}
+              octaves={2}
+              highlightOnThePiano={pianoScale}
+              createSynth={createPianoSynth}
+              alwaysShowNoteNames
+            />
+          </div>
+
           <ModeBreakdown
             tonic={tonic}
             activeMode={activeMode}
@@ -102,18 +115,7 @@ function App() {
         </>
       ) : null}
 
-      <div
-        className="piano-container"
-        style={{ background: scaleGradientColor, borderRadius: 16 }}
-      >
-        <PianoBase
-          octave={5}
-          octaves={2}
-          highlightOnThePiano={pianoScale}
-          createSynth={createPianoSynth}
-          alwaysShowNoteNames
-        />
-      </div>
+
     </div>
   );
 }
