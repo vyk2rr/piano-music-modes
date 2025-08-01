@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import MiniPianoSvg from './MiniPianoSvg';
 import type { tNoteName } from '../PianoBase/PianoBase.types';
